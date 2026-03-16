@@ -1,1 +1,1 @@
-# RetailDB-Real-time-Project-
+# RetailDB Real time SQL Project
