@@ -1,6 +1,6 @@
 # RetailDB Real time SQL Project
 
-Quries for interview 
+1. Quries for interview 
 
 2. Automate SQL server loggin with trigger 
 
