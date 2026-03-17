@@ -463,21 +463,6 @@ GROUP BY CategoryName;
 
 ---
 
-## 📈 Future Enhancements
-
-- [ ] 📊 Add Power BI dashboard integration
-- [ ] 🔄 Implement stored procedures for complex operations
-- [ ] 📱 Create REST API using ASP.NET Core
-- [ ] 🔐 Add row-level security examples
-- [ ] 🌐 Implement Always Encrypted for sensitive data
-- [ ] ⏰ Add temporal tables for historical tracking
-- [ ] 📧 Email notifications for critical events
-- [ ] 🎯 Create unit tests for stored procedures
-- [ ] 📉 Performance benchmarking reports
-- [ ] 🔍 Full-text search implementation
-
----
-
 ## 🐛 Known Issues & Solutions
 
 ### Issue #1: Login Failed
@@ -561,18 +546,10 @@ Feel free to reach out for:
 
 ---
 
-## 🙏 Acknowledgments
-
-- SQL Server Documentation
-- Database Administration Best Practices
-- Community contributions and feedback
-
----
 
 ## 📞 Support
 
 If you have any questions or need help, please:
-- Open an issue on GitHub
 - Connect on LinkedIn
 - Email: harshgholap116@gmail.com
 
