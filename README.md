@@ -410,20 +410,6 @@ ORDER BY TotalSales DESC;
 - Encrypt sensitive data
 - Use SSL/TLS for connections
 
----
-
-## 📈 Future Enhancements
-
-- [ ] 📊 Add Power BI dashboard integration
-- [ ] 🔄 Implement stored procedures for complex operations
-- [ ] 📱 Create REST API using ASP.NET Core
-- [ ] 🔐 Add row-level security examples
-- [ ] 🌐 Implement Always Encrypted for sensitive data
-- [ ] ⏰ Add temporal tables for historical tracking
-- [ ] 📧 Email notifications for critical events
-- [ ] 🎯 Create unit tests for stored procedures
-- [ ] 📉 Performance benchmarking reports
-- [ ] 🔍 Full-text search implementation
 
 ---
 
@@ -500,25 +486,18 @@ Absolutely! Feel free to fork, modify, and adapt this project for your needs. Ju
 Feel free to reach out for:
 - SQL Server queries and doubts
 - Project collaborations
-- Interview preparation tips
 - Database optimization discussions
 
 ---
 
-## 🙏 Acknowledgments
 
-- SQL Server Documentation
-- Database Administration Best Practices
-- Community contributions and feedback
-
----
 
 ## 📞 Support
 
 If you have any questions or need help, please:
 - Open an issue on GitHub
 - Connect on LinkedIn
-- Email: harshgholap05@gmail.com
+- Email: harshgholap116@gmail.com
 
 ---
 
