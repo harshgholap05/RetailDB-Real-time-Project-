@@ -3,9 +3,8 @@
 [![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)](https://www.microsoft.com/sql-server)
 [![Database](https://img.shields.io/badge/Database-RetailDB-blue?style=for-the-badge)](https://github.com/harshgholap05/RetailDB-Real-time-Project-)
 [![T-SQL](https://img.shields.io/badge/T--SQL-Queries-orange?style=for-the-badge)](https://github.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/harshgholap05/RetailDB-Real-time-Project-?style=for-the-badge)](https://github.com/harshgholap05/RetailDB-Real-time-Project-/stargazers)
-[![Forks](https://img.shields.io/github/forks/harshgholap05/RetailDB-Real-time-Project-?style=for-the-badge)](https://github.com/harshgholap05/RetailDB-Real-time-Project-/network/members)
+(https://github.com/harshgholap05/RetailDB-Real-time-Project-/stargazers)
+(https://github.com/harshgholap05/RetailDB-Real-time-Project-/network/members)
 
 ## 📋 Table of Contents
 
