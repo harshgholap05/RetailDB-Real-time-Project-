@@ -534,7 +534,7 @@ Absolutely! Feel free to fork, modify, and adapt this project for your needs. Ju
 
 **Harshvardhan Gholap**
 - 🔗 GitHub: [@harshgholap05](https://github.com/harshgholap05)
-- 💼 LinkedIn: [Harshvardhan Gholap](https://www.linkedin.com/in/harshvardhan-gholap)
+- 💼 LinkedIn: [Harshvardhan Gholap](https://www.linkedin.com/in/harshvardhan-gholap-821255326/)
 - 📧 Email: harshgholap116@gmail.com
 
 ### 🤝 Connect With Me
