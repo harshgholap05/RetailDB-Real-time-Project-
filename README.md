@@ -14,6 +14,7 @@
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [SQL Queries](#sql-queries)
+- [Views Implementation](#views-implementation)
 - [Security Implementation](#security-implementation)
 - [Advanced Concepts](#advanced-concepts)
 - [FAQ](#faq)
@@ -36,10 +37,10 @@ Built from scratch with a complete retail management system, this project covers
 
 ### Project Highlights:
 - 📊 **20+ SQL Queries** - From basic to advanced level
+- 👁️ **17 View-Based Queries** - Data abstraction and reusable query logic
 - 🔐 **20 RBAC Scenarios** - Complete role-based access control implementation
 - ⚡ **Automated Triggers** - Real-time logging and data integrity
 - 🗂️ **Indexing Strategies** - Both clustered & non-clustered indexes
-- 👁️ **Views Implementation** - Data abstraction and security layers
 - 🔧 **Maintenance Plans** - Automated database health management
 
 ### 💼 Use Cases:
@@ -140,6 +141,7 @@ The **RetailDB** database consists of the following tables:
 - **Materialized Views** - Pre-computed results
 - **Updateable Views** - Allow DML operations
 - Security through views
+- **17 View-Based Queries** demonstrating real-world usage
 
 ### 5. 🔐 SQL Server Security & Permissions
 - **Logins** - SQL Server authentication
@@ -149,6 +151,7 @@ The **RetailDB** database consists of the following tables:
 - **Role-Based Access Control (RBAC)**
 - **Column-level security**
 - **Row-level security**
+- **20 Different Security Scenarios** covering all access levels
 
 ### 6. 🔧 Automated Maintenance Plans
 - Database backup strategies
@@ -247,21 +250,16 @@ CREATE NONCLUSTERED INDEX IX_Orders_CustomerID
 ON Orders(Customer_id);
 ```
 
-### 👁️ View Examples
+---
 
+## 👁️ Views Implementation
+
+The project includes **3 main views** and **17 view-based queries** demonstrating practical usage:
+
+### Main Views Created:
+
+#### 1. VW_ProductsDetail
 ```sql
--- Customer Orders View
-CREATE VIEW vw_CustomerOrders AS
-SELECT 
-    c.customer_id,
-    c.FirstName + ' ' + c.LastName AS CustomerName,
-    o.Order_id,
-    o.OrderDate,
-    o.TotalAmount
-FROM Customers c
-INNER JOIN Orders o ON c.customer_id = o.Customer_id;
-
--- Products Detail View
 CREATE VIEW VW_ProductsDetail AS
 SELECT 
     p.product_id,
@@ -273,13 +271,65 @@ FROM Products p
 INNER JOIN Categories c ON p.CategoryID = c.CategoryID;
 ```
 
+#### 2. vw_CustomerOrders
+```sql
+CREATE VIEW vw_CustomerOrders AS
+SELECT 
+    c.customer_id,
+    c.FirstName,
+    c.LastName,
+    COUNT(o.Order_id) AS TotalOrders,
+    SUM(oi.Quantity * p.Price) AS TotalAmount
+FROM Customers c
+INNER JOIN Orders o ON c.customer_id = o.Customer_id
+INNER JOIN Order_items oi ON o.Order_id = oi.Order_id
+INNER JOIN Products p ON oi.Product_id = p.Product_id
+GROUP BY c.customer_id, c.FirstName, c.LastName;
+```
+
+#### 3. vw_RecentOrders
+```sql
+CREATE VIEW vw_RecentOrders AS
+SELECT 
+    o.Order_id,
+    o.OrderDate,
+    c.customer_id,
+    c.FirstName,
+    c.LastName,
+    SUM(oi.Quantity * oi.Price) AS OrderAmount
+FROM Customers c
+INNER JOIN Orders o ON c.customer_id = o.Customer_id
+INNER JOIN Order_items oi ON o.Order_id = oi.Order_id
+GROUP BY o.Order_id, o.OrderDate, c.customer_id, c.FirstName, c.LastName;
+```
+
+### 17 View-Based Queries:
+
+1. **View for customer orders** - Summary of orders placed by each customer
+2. **View for Recent Orders** - Orders placed in the last 30 days
+3. **Retrieve All products with category Names** - Using VW_ProductsDetail
+4. **Retrieve Products within specific price range** - Price filtering using views
+5. **Count products in each category** - Category-wise product count
+6. **Retrieve Customers with more than 1 order** - Customer order analysis
+7. **Retrieve total amount spent by each customer** - Customer spending analysis
+8. **Retrieve Recent orders above certain amount** - High-value recent orders
+9. **Retrieve latest order for each customer** - Customer's most recent purchase
+10. **Retrieve products in specific category** - Category-based product filtering
+11. **Retrieve TotalSales for each category** - Category revenue analysis
+12. **Retrieve customer orders with product Details** - Complete order information
+13. **Retrieve top 5 customers by total spending** - Customer ranking
+14. **Retrieve Products with low stock** - Inventory management
+15. **Retrieve Orders Placed in last 7 Days** - Recent order tracking
+16. **Retrieve products sold in last month** - Monthly sales analysis
+17. **Advanced multi-view queries** - Combining multiple views for complex analysis
+
 ---
 
 ## 🔐 Security Implementation
 
 ### Role-Based Access Control (RBAC)
 
-The project implements **20 different security scenarios**, including:
+The project implements **20 different security scenarios**, covering all levels of database access:
 
 #### Example 1: Sales Role
 ```sql
@@ -313,26 +363,27 @@ GRANT SELECT ON Customers(Email, Phone) TO SensitiveDataRole;
 ```
 
 ### 20 Security Scenarios Covered:
-1. Read-Only Access to all tables
-2. Data Entry Clerk (Insert only)
-3. Product Manager (Full access to Products)
-4. Order Processor (Read & Update Orders)
-5. Customer Support (Read-only Customers)
-6. Marketing Analyst (Read Orders/Items)
-7. Sales Analyst (Multi-table read access)
-8. Inventory Manager (Full Products access)
-9. Finance Analyst (Read & Update Orders)
-10. Backup Operator (Database backups)
-11. Database Developer (Schema modifications)
-12. Restricted Read (Specific columns only)
-13. Reporting User (Views only)
-14. Temporary Access (Time-bound)
-15. External Auditor (Read-only with explicit DENY)
-16. Application Role (App-based access)
-17. Combined Roles (Multiple role inheritance)
-18. Sensitive Data Access (Email/Phone only)
-19. Developer Role (Full development access)
-20. Security Administrator (User/Role management)
+
+1. **Read-Only Access** - SELECT permission on all tables
+2. **Data Entry Clerk** - INSERT only on Orders and Order_items
+3. **Product Manager** - Full access to Products and Categories
+4. **Order Processor** - Read & Update access on Orders
+5. **Customer Support** - Read-only access to Customers
+6. **Marketing Analyst** - Read access to Orders and Order_items
+7. **Sales Analyst** - Read access to Orders, Order_items, and Products
+8. **Inventory Manager** - Full access to Products table
+9. **Finance Analyst** - Read & Update access to Orders
+10. **Backup Operator** - Database backup permissions
+11. **Database Developer** - Schema modification permissions
+12. **Restricted Read** - Access to specific columns only
+13. **Reporting User** - Access to Views only
+14. **Temporary Access** - Time-bound access control
+15. **External Auditor** - Read-only with explicit DENY on modifications
+16. **Application Role** - Application-based access control
+17. **Combined Roles** - Multiple role inheritance
+18. **Sensitive Data Access** - Column-level permissions (Email, Phone)
+19. **Developer Role** - Full development database access
+20. **Security Administrator** - User and Role management permissions
 
 ---
 
@@ -368,17 +419,15 @@ GROUP BY YEAR(OrderDate), MONTH(OrderDate)
 ORDER BY OrderYear, OrderMonth;
 ```
 
-### Sample Query: Product Performance
+### Sample Query: Product Performance Using Views
 
 ```sql
+-- Using vw_ProductsDetail to analyze product categories
 SELECT 
-    p.product_id, 
-    p.ProductName, 
-    SUM(oi.Quantity * oi.Price) AS TotalSales 
-FROM Products p 
-JOIN Order_items oi ON oi.product_id = p.product_id
-GROUP BY p.Product_id, p.ProductName
-ORDER BY TotalSales DESC;
+    CategoryName, 
+    COUNT(product_id) AS ProductCount
+FROM VW_ProductsDetail
+GROUP BY CategoryName;
 ```
 
 ---
@@ -402,6 +451,7 @@ ORDER BY TotalSales DESC;
 - Implement security layers
 - Create reusable query logic
 - Abstract underlying table structure
+- Performance optimization through indexed views
 
 ### Security Best Practices
 - Principle of least privilege
@@ -409,7 +459,22 @@ ORDER BY TotalSales DESC;
 - Regular security audits
 - Encrypt sensitive data
 - Use SSL/TLS for connections
+- Column-level and row-level security
 
+---
+
+## 📈 Future Enhancements
+
+- [ ] 📊 Add Power BI dashboard integration
+- [ ] 🔄 Implement stored procedures for complex operations
+- [ ] 📱 Create REST API using ASP.NET Core
+- [ ] 🔐 Add row-level security examples
+- [ ] 🌐 Implement Always Encrypted for sensitive data
+- [ ] ⏰ Add temporal tables for historical tracking
+- [ ] 📧 Email notifications for critical events
+- [ ] 🎯 Create unit tests for stored procedures
+- [ ] 📉 Performance benchmarking reports
+- [ ] 🔍 Full-text search implementation
 
 ---
 
@@ -426,6 +491,10 @@ ORDER BY TotalSales DESC;
 ### Issue #3: Trigger Not Firing
 **Problem**: Audit log not updating  
 **Solution**: Check if triggers are enabled: `ALTER TABLE TableName ENABLE TRIGGER ALL`
+
+### Issue #4: View Not Updating
+**Problem**: View showing old data  
+**Solution**: Views are virtual - they query base tables in real-time. Check if base table data has changed.
 
 ---
 
@@ -468,9 +537,10 @@ Absolutely! Feel free to fork, modify, and adapt this project for your needs. Ju
 - **v1.0.0** (2024) - Initial Release
   - Complete database schema
   - 20+ SQL queries
+  - 17 View-based queries
+  - 20 RBAC scenarios
   - Trigger implementations
   - Indexing examples
-  - Views and security
   - Automated maintenance
 
 ---
@@ -480,17 +550,24 @@ Absolutely! Feel free to fork, modify, and adapt this project for your needs. Ju
 **Harshvardhan Gholap**
 - 🔗 GitHub: [@harshgholap05](https://github.com/harshgholap05)
 - 💼 LinkedIn: [Harshvardhan Gholap](https://www.linkedin.com/in/harshvardhan-gholap)
-- 📧 Email: harshgholap05@gmail.com
+- 📧 Email: harshgholap116@gmail.com
 
 ### 🤝 Connect With Me
 Feel free to reach out for:
 - SQL Server queries and doubts
 - Project collaborations
+- Interview preparation tips
 - Database optimization discussions
 
 ---
 
+## 🙏 Acknowledgments
 
+- SQL Server Documentation
+- Database Administration Best Practices
+- Community contributions and feedback
+
+---
 
 ## 📞 Support
 
