@@ -15,6 +15,7 @@
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [SQL Queries](#sql-queries)
+- [Stored Procedures Implementation](#stored-procedures-implementation)
 - [Views Implementation](#views-implementation)
 - [Security Implementation](#security-implementation)
 - [Advanced Concepts](#advanced-concepts)
@@ -38,6 +39,7 @@ Built from scratch with a complete retail management system, this project covers
 
 ### Project Highlights:
 - 📊 **20+ SQL Queries** - From basic to advanced level
+- 🔄 **12+ Stored Procedures** - Reusable business logic with parameterization
 - 👁️ **17 View-Based Queries** - Data abstraction and reusable query logic
 - 🔐 **20 RBAC Scenarios** - Complete role-based access control implementation
 - ⚡ **Automated Triggers** - Real-time logging and data integrity
@@ -68,8 +70,8 @@ Built from scratch with a complete retail management system, this project covers
 📌 Triggers (INSERT, UPDATE, DELETE, INSTEAD OF)
 📌 Indexing (Clustered, Non-Clustered, Covering Indexes)
 📌 Views (Simple, Complex, Materialized)
+📌 Stored Procedures & User-Defined Functions
 📌 Security (RBAC, Logins, Users, Roles, Permissions)
-📌 Stored Procedures & Functions
 📌 Database Maintenance & Optimization
 📌 Performance Tuning
 📌 Audit Logging & Data Integrity
@@ -136,7 +138,15 @@ The **RetailDB** database consists of the following tables:
 - Faster lookups on specific columns
 - Includes covering indexes
 
-### 4. 👁️ Implementing Views
+### 4. 📦 Stored Procedures
+- **Parameterized Queries** - Dynamic query execution
+- **Business Logic Encapsulation** - Reusable code blocks
+- **Performance Optimization** - Faster execution through pre-compilation
+- **Security Enhancement** - Controlled data access
+- **Maintenance Simplification** - Centralized query management
+- **12+ Real-World Procedures** demonstrating CRUD operations and reporting
+
+### 5. 👁️ Implementing Views
 - **Simple Views** - Single table data abstraction
 - **Complex Views** - Multi-table joins
 - **Materialized Views** - Pre-computed results
@@ -144,7 +154,7 @@ The **RetailDB** database consists of the following tables:
 - Security through views
 - **17 View-Based Queries** demonstrating real-world usage
 
-### 5. 🔐 SQL Server Security & Permissions
+### 6. 🔐 SQL Server Security & Permissions
 - **Logins** - SQL Server authentication
 - **Users** - Database-level access
 - **Roles** - Permission grouping
@@ -154,7 +164,7 @@ The **RetailDB** database consists of the following tables:
 - **Row-level security**
 - **20 Different Security Scenarios** covering all access levels
 
-### 6. 🔧 Automated Maintenance Plans
+### 7. 🔧 Automated Maintenance Plans
 - Database backup strategies
 - Index maintenance and rebuilding
 - Statistics updates
@@ -253,60 +263,405 @@ ON Orders(Customer_id);
 
 ---
 
+## 📦 Stored Procedures Implementation
+
+### What are Stored Procedures?
+
+A **Stored Procedure** is a saved SQL query (or group of queries) that can be executed anytime by calling its name. They provide:
+
+- ⚡ **Faster Execution** - Pre-compiled and cached by SQL Server
+- 🔧 **Easy Maintenance** - Update logic in one place
+- 🔐 **Enhanced Security** - Control data access without exposing table structure
+- 📊 **Reusability** - Write once, use everywhere
+
+### Types of Stored Procedures
+
+1. **System Stored Procedures** - Built-in procedures (e.g., `sp_help`, `sp_who`)
+2. **User-Defined Stored Procedures** - Created by developers
+3. **Temporary Stored Procedures** - Start with `#` (local) or `##` (global)
+
+### Basic Syntax
+
+```sql
+CREATE PROCEDURE procedure_name
+AS
+BEGIN
+    -- SQL queries
+END
+```
+
+---
+
+### 📋 Implemented Stored Procedures
+
+#### 1. GetAllCustomers
+**Purpose**: Retrieve all customer records
+
+```sql
+CREATE PROCEDURE GetAllCustomers
+AS 
+BEGIN
+    SELECT * FROM customers 
+END;
+GO
+
+-- Execute
+EXEC GetAllCustomers;
+```
+
+---
+
+#### 2. GetCustomerByID
+**Purpose**: Retrieve a specific customer by their ID
+
+```sql
+CREATE PROCEDURE GetCustomerByID
+@id INT 
+AS BEGIN 
+    SELECT * FROM customers 
+    WHERE customer_id = @id
+END;
+GO
+
+-- Execute
+EXEC GetCustomerByID @id = 1;
+EXEC GetCustomerByID @id = 4;
+```
+
+**Key Features**:
+- Parameterized input for dynamic filtering
+- Prevents SQL injection attacks
+
+---
+
+#### 3. AddCustomers
+**Purpose**: Insert new customer records into the database
+
+```sql
+CREATE PROCEDURE AddCustomers
+@FirstName VARCHAR(50),
+@LastName VARCHAR(50),
+@City VARCHAR(50)
+AS 
+BEGIN
+    INSERT INTO Customers(FirstName, LastName, City)
+    VALUES(@FirstName, @LastName, @City)
+END;
+GO
+
+-- Execute
+EXEC AddCustomers 'Raju', 'Patel', 'DUBAI';
+```
+
+**Key Features**:
+- Encapsulates INSERT logic
+- Validates input parameters
+- Maintains data integrity
+
+---
+
+#### 4. UpdateCustomerName
+**Purpose**: Update customer's first name
+
+```sql
+CREATE OR ALTER PROCEDURE UpdateCustomerName 
+@customer_id INT,
+@NewName NVARCHAR(50)
+AS 
+BEGIN 
+    UPDATE customers
+    SET FirstName = @NewName
+    WHERE customer_id = @customer_id
+END;
+GO
+
+-- Execute
+EXEC UpdateCustomerName 1, 'Bhavya';
+```
+
+**Key Features**:
+- Uses `CREATE OR ALTER` for easier updates
+- Targeted UPDATE operation
+- Parameter validation
+
+---
+
+#### 5. GetCustomerOrders
+**Purpose**: Retrieve all orders and order details for a specific customer
+
+```sql
+CREATE PROCEDURE GetCustomerOrders 
+@customer_id INT
+AS 
+BEGIN 
+    SELECT 
+        o.Order_id, 
+        o.OrderDate, 
+        o.TotalAmount,
+        oi.Product_id, 
+        p.ProductName, 
+        oi.Quantity, 
+        oi.Price
+    FROM Orders o 
+    JOIN Order_items oi ON o.Order_id = oi.Order_id
+    JOIN products p ON oi.product_id = p.product_id
+    WHERE o.customer_id = @customer_id
+END;
+GO
+
+-- Execute
+EXEC GetCustomerOrders @customer_id = 1;
+```
+
+**Key Features**:
+- Multi-table JOIN operation
+- Comprehensive order details
+- Customer-specific filtering
+
+---
+
+#### 6. GetTotalSalesPerProduct
+**Purpose**: Calculate total sales revenue for each product
+
+```sql
+CREATE PROCEDURE GetTotalSalesPerProduct
+AS 
+BEGIN 
+    SELECT 
+        p.product_id, 
+        p.ProductName, 
+        SUM(oi.quantity * oi.price) AS TotalSales
+    FROM products p
+    JOIN order_items oi ON oi.Product_id = p.product_id
+    GROUP BY p.product_id, p.ProductName
+    ORDER BY TotalSales DESC;
+END;
+GO
+
+-- Execute
+EXEC GetTotalSalesPerProduct;
+```
+
+**Key Features**:
+- Aggregate calculations
+- Product performance analysis
+- Sorted by revenue (highest first)
+
+---
+
+#### 7. GetAverageOrderValue
+**Purpose**: Calculate the average order value across all orders
+
+```sql
+CREATE PROCEDURE GetAverageOrderValue
+AS 
+BEGIN 
+    SELECT AVG(TotalAmount) AS AverageOrderValue
+    FROM Orders 
+END;
+GO
+
+-- Execute
+EXEC GetAverageOrderValue;
+```
+
+**Key Features**:
+- Simple aggregate function
+- Business metric calculation
+- Useful for KPI reporting
+
+---
+
+#### 8. GetTop5Customers
+**Purpose**: Identify the top 5 highest-spending customers
+
+```sql
+CREATE OR ALTER PROCEDURE GetTop5Customers
+AS 
+BEGIN 
+    SELECT TOP 5 
+        C.customer_id, 
+        C.FirstName, 
+        C.LastName, 
+        SUM(O.TotalAmount) AS TotalSpending
+    FROM Customers C
+    JOIN Orders O ON C.customer_id = O.customer_id	
+    GROUP BY C.customer_id, C.FirstName, C.LastName
+    ORDER BY TotalSpending DESC;
+END;
+GO
+
+-- Execute
+EXEC GetTop5Customers;
+```
+
+**Key Features**:
+- Customer segmentation
+- Revenue analysis
+- Marketing insights
+
+---
+
+#### 9. GetOutOfStockProducts
+**Purpose**: List all products that are currently out of stock
+
+```sql
+CREATE PROCEDURE GetOutOfStockProducts
+AS 
+BEGIN 
+    SELECT 
+        p.product_id, 
+        p.ProductName, 
+        p.Stock, 
+        C.CategoryName
+    FROM products p
+    JOIN categories c ON p.CategoryID = c.CategoryID
+    WHERE Stock = 0
+END;
+GO
+
+-- Execute
+EXEC GetOutOfStockProducts;
+```
+
+**Key Features**:
+- Inventory management
+- Stock tracking
+- Category-wise view
+
+---
+
+#### 10. GetRecentCustomers30DAYS
+**Purpose**: Find customers who placed orders in the last 30 days
+
+```sql
+CREATE PROCEDURE GetRecentCustomers30DAYS 
+AS 
+BEGIN 
+    SELECT 
+        C.customer_id, 
+        C.FirstName, 
+        C.LastName, 
+        C.Email, 
+        C.City, 
+        C.Country, 
+        O.OrderDate
+    FROM Customers C
+    JOIN Orders O ON C.customer_id = O.customer_id
+    WHERE O.OrderDate >= DATEADD(DAY, -30, GETDATE())
+END;
+GO
+
+-- Execute
+EXEC GetRecentCustomers30DAYS;
+```
+
+**Key Features**:
+- Time-based filtering
+- Customer activity tracking
+- Uses `DATEADD()` and `GETDATE()` functions
+
+---
+
+#### 11. GetMonthlyOrderCount
+**Purpose**: Count orders grouped by month and year
+
+```sql
+CREATE PROCEDURE GetMonthlyOrderCount
+AS 
+BEGIN 
+    SELECT 
+        MONTH(OrderDate) AS OrderMonth,
+        YEAR(OrderDate) AS OrderYear,
+        COUNT(Order_id) AS OrderCount
+    FROM Orders
+    GROUP BY MONTH(OrderDate), YEAR(OrderDate)
+    ORDER BY OrderYear DESC, OrderMonth DESC;
+END;
+GO
+
+-- Execute
+EXEC GetMonthlyOrderCount;
+```
+
+**Key Features**:
+- Date/time functions
+- Trend analysis
+- Monthly reporting
+
+---
+
+#### 12. GetOrdersAboveAmount
+**Purpose**: Retrieve orders exceeding a specified amount
+
+```
+**Key Features**:
+- Parameterized filtering
+- High-value order tracking
+- Customer identification
+
+---
+
+### 🔧 Stored Procedure Best Practices
+
+1. **Use Clear Naming Conventions**
+   - Use verbs: `Get`, `Add`, `Update`, `Delete`
+   - Be descriptive: `GetCustomerOrders` instead of `GetCO`
+
+2. **Always Use BEGIN...END**
+   - Even for single statements
+   - Improves readability and maintainability
+
+3. **Add Error Handling**
+   ```sql
+   BEGIN TRY
+       -- Your code here
+   END TRY
+   BEGIN CATCH
+       SELECT ERROR_MESSAGE() AS ErrorMessage;
+   END CATCH
+   ```
+
+4. **Use CREATE OR ALTER**
+   - Allows updating procedures without dropping them
+   - Preserves permissions
+
+5. **Document Your Procedures**
+   - Add comments explaining purpose
+   - Document parameters and return values
+
+6. **Use Parameters Wisely**
+   - Prevent SQL injection
+   - Make procedures flexible and reusable
+
+---
+
+### 🎯 When to Use Stored Procedures
+
+✅ **Use Stored Procedures When**:
+- Executing complex business logic
+- Performing frequent database operations
+- Needing security through abstraction
+- Improving performance through caching
+- Centralizing data access logic
+
+❌ **Avoid Stored Procedures When**:
+- Simple SELECT queries suffice
+- Dynamic SQL is heavily required
+- Cross-platform compatibility is needed
+- Rapid development cycles demand flexibility
+
+---
+
 ## 👁️ Views Implementation
 
-The project includes **3 main views** and **17 view-based queries** demonstrating practical usage:
+### What are Views?
 
-### Main Views Created:
+**Views** are virtual tables based on SQL queries. They simplify data access and provide security through abstraction.
 
-#### 1. VW_ProductsDetail
-```sql
-CREATE VIEW VW_ProductsDetail AS
-SELECT 
-    p.product_id,
-    p.ProductName,
-    c.CategoryName,
-    p.Price,
-    p.Stock
-FROM Products p
-INNER JOIN Categories c ON p.CategoryID = c.CategoryID;
-```
+### 17 View-Based Queries
 
-#### 2. vw_CustomerOrders
-```sql
-CREATE VIEW vw_CustomerOrders AS
-SELECT 
-    c.customer_id,
-    c.FirstName,
-    c.LastName,
-    COUNT(o.Order_id) AS TotalOrders,
-    SUM(oi.Quantity * p.Price) AS TotalAmount
-FROM Customers c
-INNER JOIN Orders o ON c.customer_id = o.Customer_id
-INNER JOIN Order_items oi ON o.Order_id = oi.Order_id
-INNER JOIN Products p ON oi.Product_id = p.Product_id
-GROUP BY c.customer_id, c.FirstName, c.LastName;
-```
-
-#### 3. vw_RecentOrders
-```sql
-CREATE VIEW vw_RecentOrders AS
-SELECT 
-    o.Order_id,
-    o.OrderDate,
-    c.customer_id,
-    c.FirstName,
-    c.LastName,
-    SUM(oi.Quantity * oi.Price) AS OrderAmount
-FROM Customers c
-INNER JOIN Orders o ON c.customer_id = o.Customer_id
-INNER JOIN Order_items oi ON o.Order_id = oi.Order_id
-GROUP BY o.Order_id, o.OrderDate, c.customer_id, c.FirstName, c.LastName;
-```
-
-### 17 View-Based Queries:
-
-1. **View for customer orders** - Summary of orders placed by each customer
+1. **View for All Customers and Orders** - Basic customer-order relationship
 2. **View for Recent Orders** - Orders placed in the last 30 days
 3. **Retrieve All products with category Names** - Using VW_ProductsDetail
 4. **Retrieve Products within specific price range** - Price filtering using views
@@ -323,6 +678,27 @@ GROUP BY o.Order_id, o.OrderDate, c.customer_id, c.FirstName, c.LastName;
 15. **Retrieve Orders Placed in last 7 Days** - Recent order tracking
 16. **Retrieve products sold in last month** - Monthly sales analysis
 17. **Advanced multi-view queries** - Combining multiple views for complex analysis
+
+### Example View
+
+```sql
+-- Create a view for product details with category
+CREATE VIEW VW_ProductsDetail AS
+SELECT 
+    p.product_id,
+    p.ProductName,
+    p.Price,
+    p.Stock,
+    c.CategoryName,
+    c.Description
+FROM Products p
+JOIN Categories c ON p.CategoryID = c.CategoryID;
+GO
+
+-- Use the view
+SELECT * FROM VW_ProductsDetail
+WHERE Price BETWEEN 100 AND 500;
+```
 
 ---
 
@@ -435,6 +811,13 @@ GROUP BY CategoryName;
 
 ## 🎓 Advanced Concepts
 
+### Stored Procedures
+- Encapsulate business logic
+- Improve performance through pre-compilation
+- Enhance security through controlled access
+- Simplify maintenance with centralized code
+- Support parameterization for flexibility
+
 ### Triggers
 - Automated data logging
 - Data validation
@@ -482,6 +865,10 @@ GROUP BY CategoryName;
 **Problem**: View showing old data  
 **Solution**: Views are virtual - they query base tables in real-time. Check if base table data has changed.
 
+### Issue #5: Stored Procedure Not Found
+**Problem**: "Could not find stored procedure" error  
+**Solution**: Ensure you're in the correct database context with `USE RetailDB;`
+
 ---
 
 ## ❓ FAQ
@@ -516,9 +903,21 @@ Yes! This project covers 80% of SQL questions asked in technical interviews for 
 Absolutely! Feel free to fork, modify, and adapt this project for your needs. Just give proper credit if you share it.
 </details>
 
+<details>
+<summary><b>Q6: What's the difference between Views and Stored Procedures?</b></summary>
+<br>
+Views are virtual tables that store queries, while Stored Procedures are saved SQL scripts that can perform complex operations including INSERT, UPDATE, DELETE. Views are typically used for SELECT operations, while Stored Procedures can handle complete business logic.
+</details>
+
 ---
 
 ## 🔖 Version History
+
+- **v1.1.0** (2024) - Stored Procedures Update
+  - Added 12+ stored procedures
+  - Enhanced documentation
+  - Improved code examples
+  - Added best practices section
 
 - **v1.0.0** (2024) - Initial Release
   - Complete database schema
@@ -546,7 +945,6 @@ Feel free to reach out for:
 - Database optimization discussions
 
 ---
-
 
 ## 📞 Support
 
