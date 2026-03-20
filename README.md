@@ -401,6 +401,12 @@ END
 #### 12. GetOrdersAboveAmount
 **Purpose**: Retrieve orders exceeding a specified amount
 
+**Key Features**:
+- Parameterized filtering
+- High-value order tracking
+- Customer identification
+  
+---
 
 ```
 ---
