@@ -964,7 +964,7 @@ Types of Store Procedures
 	-- RUN 
 	EXEC GetAllCustomers 
 
-	-- Query 5: Update Procedure
+	-- Query 4: Update Procedure
 
 	CREATE OR ALTER PROCEDURE UpdateCustomerName 
 	@customer_id int,
@@ -1012,7 +1012,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	-- GO
 
 
-	-- Query 6: Total Sales per Product 
+	-- Query 7: Total Sales per Product 
 	CREATE PROCEDURE GetTotalSalesPerProduct
 	As 
 	begin 
@@ -1030,7 +1030,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	EXEC GetTotalSalesPerProduct;
 
 
-	-- Query 7: Average Order Value 
+	-- Query 8: Average Order Value 
 	CREATE PROCEDURE GetAverageOrderValue
 	AS 
 	BEGIN 
@@ -1043,7 +1043,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	EXEC GetAverageOrderValue;
 
 
-	-- QUERY 8: Get top 5 customers 
+	-- QUERY 9: Get top 5 customers 
 	CREATE OR ALTER PROCEDURE GetTop5Customers
 	AS 
 	BEGIN 
@@ -1060,7 +1060,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	EXEC GetTop5Customers;
 
 
-	-- Query 9: Out of Stock Products
+	-- Query 10: Out of Stock Products
 	CREATE PROCEDURE GetOutOfStockProducts
 	AS 
 	BEGIN 
@@ -1076,7 +1076,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	EXEC GetOutOfStockProducts;
 
 
-	-- Query 10: Recent Customer Last 30 days 
+	-- Query 11: Recent Customer Last 30 days 
 	CREATE PROCEDURE GetRecentCustomers30DAYS 
 	AS 
 	BEGIN 
@@ -1091,7 +1091,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	EXEC GetRecentCustomers30DAYS;
 
 
-	-- Query 11: Month Order Count
+	-- Query 12: Month Order Count
 	CREATE PROCEDURE GetMonthlyOrderCount
 	AS 
 	BEGIN 
@@ -1107,7 +1107,7 @@ Select o.Order_id, o.OrderDate, o.TotalAmount,
 	EXEC GetMonthlyOrderCount;
 
 
-	-- Query 12: Order Above Amount 
+	-- Query 13: Order Above Amount 
 	CREATE PROCEDURE GetOrdersAboveAmount
 	@Amount Decimal(10,2)
 	AS 
