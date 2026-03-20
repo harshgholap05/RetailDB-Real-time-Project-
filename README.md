@@ -297,37 +297,11 @@ END
 #### 1. GetAllCustomers
 **Purpose**: Retrieve all customer records
 
-```sql
-CREATE PROCEDURE GetAllCustomers
-AS 
-BEGIN
-    SELECT * FROM customers 
-END;
-GO
-
--- Execute
-EXEC GetAllCustomers;
-```
 
 ---
 
 #### 2. GetCustomerByID
 **Purpose**: Retrieve a specific customer by their ID
-
-```sql
-CREATE PROCEDURE GetCustomerByID
-@id INT 
-AS BEGIN 
-    SELECT * FROM customers 
-    WHERE customer_id = @id
-END;
-GO
-
--- Execute
-EXEC GetCustomerByID @id = 1;
-EXEC GetCustomerByID @id = 4;
-```
-
 **Key Features**:
 - Parameterized input for dynamic filtering
 - Prevents SQL injection attacks
@@ -336,22 +310,6 @@ EXEC GetCustomerByID @id = 4;
 
 #### 3. AddCustomers
 **Purpose**: Insert new customer records into the database
-
-```sql
-CREATE PROCEDURE AddCustomers
-@FirstName VARCHAR(50),
-@LastName VARCHAR(50),
-@City VARCHAR(50)
-AS 
-BEGIN
-    INSERT INTO Customers(FirstName, LastName, City)
-    VALUES(@FirstName, @LastName, @City)
-END;
-GO
-
--- Execute
-EXEC AddCustomers 'Raju', 'Patel', 'DUBAI';
-```
 
 **Key Features**:
 - Encapsulates INSERT logic
@@ -363,22 +321,6 @@ EXEC AddCustomers 'Raju', 'Patel', 'DUBAI';
 #### 4. UpdateCustomerName
 **Purpose**: Update customer's first name
 
-```sql
-CREATE OR ALTER PROCEDURE UpdateCustomerName 
-@customer_id INT,
-@NewName NVARCHAR(50)
-AS 
-BEGIN 
-    UPDATE customers
-    SET FirstName = @NewName
-    WHERE customer_id = @customer_id
-END;
-GO
-
--- Execute
-EXEC UpdateCustomerName 1, 'Bhavya';
-```
-
 **Key Features**:
 - Uses `CREATE OR ALTER` for easier updates
 - Targeted UPDATE operation
@@ -388,30 +330,6 @@ EXEC UpdateCustomerName 1, 'Bhavya';
 
 #### 5. GetCustomerOrders
 **Purpose**: Retrieve all orders and order details for a specific customer
-
-```sql
-CREATE PROCEDURE GetCustomerOrders 
-@customer_id INT
-AS 
-BEGIN 
-    SELECT 
-        o.Order_id, 
-        o.OrderDate, 
-        o.TotalAmount,
-        oi.Product_id, 
-        p.ProductName, 
-        oi.Quantity, 
-        oi.Price
-    FROM Orders o 
-    JOIN Order_items oi ON o.Order_id = oi.Order_id
-    JOIN products p ON oi.product_id = p.product_id
-    WHERE o.customer_id = @customer_id
-END;
-GO
-
--- Execute
-EXEC GetCustomerOrders @customer_id = 1;
-```
 
 **Key Features**:
 - Multi-table JOIN operation
@@ -423,25 +341,6 @@ EXEC GetCustomerOrders @customer_id = 1;
 #### 6. GetTotalSalesPerProduct
 **Purpose**: Calculate total sales revenue for each product
 
-```sql
-CREATE PROCEDURE GetTotalSalesPerProduct
-AS 
-BEGIN 
-    SELECT 
-        p.product_id, 
-        p.ProductName, 
-        SUM(oi.quantity * oi.price) AS TotalSales
-    FROM products p
-    JOIN order_items oi ON oi.Product_id = p.product_id
-    GROUP BY p.product_id, p.ProductName
-    ORDER BY TotalSales DESC;
-END;
-GO
-
--- Execute
-EXEC GetTotalSalesPerProduct;
-```
-
 **Key Features**:
 - Aggregate calculations
 - Product performance analysis
@@ -451,19 +350,6 @@ EXEC GetTotalSalesPerProduct;
 
 #### 7. GetAverageOrderValue
 **Purpose**: Calculate the average order value across all orders
-
-```sql
-CREATE PROCEDURE GetAverageOrderValue
-AS 
-BEGIN 
-    SELECT AVG(TotalAmount) AS AverageOrderValue
-    FROM Orders 
-END;
-GO
-
--- Execute
-EXEC GetAverageOrderValue;
-```
 
 **Key Features**:
 - Simple aggregate function
@@ -475,26 +361,6 @@ EXEC GetAverageOrderValue;
 #### 8. GetTop5Customers
 **Purpose**: Identify the top 5 highest-spending customers
 
-```sql
-CREATE OR ALTER PROCEDURE GetTop5Customers
-AS 
-BEGIN 
-    SELECT TOP 5 
-        C.customer_id, 
-        C.FirstName, 
-        C.LastName, 
-        SUM(O.TotalAmount) AS TotalSpending
-    FROM Customers C
-    JOIN Orders O ON C.customer_id = O.customer_id	
-    GROUP BY C.customer_id, C.FirstName, C.LastName
-    ORDER BY TotalSpending DESC;
-END;
-GO
-
--- Execute
-EXEC GetTop5Customers;
-```
-
 **Key Features**:
 - Customer segmentation
 - Revenue analysis
@@ -504,25 +370,6 @@ EXEC GetTop5Customers;
 
 #### 9. GetOutOfStockProducts
 **Purpose**: List all products that are currently out of stock
-
-```sql
-CREATE PROCEDURE GetOutOfStockProducts
-AS 
-BEGIN 
-    SELECT 
-        p.product_id, 
-        p.ProductName, 
-        p.Stock, 
-        C.CategoryName
-    FROM products p
-    JOIN categories c ON p.CategoryID = c.CategoryID
-    WHERE Stock = 0
-END;
-GO
-
--- Execute
-EXEC GetOutOfStockProducts;
-```
 
 **Key Features**:
 - Inventory management
@@ -534,28 +381,6 @@ EXEC GetOutOfStockProducts;
 #### 10. GetRecentCustomers30DAYS
 **Purpose**: Find customers who placed orders in the last 30 days
 
-```sql
-CREATE PROCEDURE GetRecentCustomers30DAYS 
-AS 
-BEGIN 
-    SELECT 
-        C.customer_id, 
-        C.FirstName, 
-        C.LastName, 
-        C.Email, 
-        C.City, 
-        C.Country, 
-        O.OrderDate
-    FROM Customers C
-    JOIN Orders O ON C.customer_id = O.customer_id
-    WHERE O.OrderDate >= DATEADD(DAY, -30, GETDATE())
-END;
-GO
-
--- Execute
-EXEC GetRecentCustomers30DAYS;
-```
-
 **Key Features**:
 - Time-based filtering
 - Customer activity tracking
@@ -565,24 +390,6 @@ EXEC GetRecentCustomers30DAYS;
 
 #### 11. GetMonthlyOrderCount
 **Purpose**: Count orders grouped by month and year
-
-```sql
-CREATE PROCEDURE GetMonthlyOrderCount
-AS 
-BEGIN 
-    SELECT 
-        MONTH(OrderDate) AS OrderMonth,
-        YEAR(OrderDate) AS OrderYear,
-        COUNT(Order_id) AS OrderCount
-    FROM Orders
-    GROUP BY MONTH(OrderDate), YEAR(OrderDate)
-    ORDER BY OrderYear DESC, OrderMonth DESC;
-END;
-GO
-
--- Execute
-EXEC GetMonthlyOrderCount;
-```
 
 **Key Features**:
 - Date/time functions
@@ -594,12 +401,8 @@ EXEC GetMonthlyOrderCount;
 #### 12. GetOrdersAboveAmount
 **Purpose**: Retrieve orders exceeding a specified amount
 
-```
-**Key Features**:
-- Parameterized filtering
-- High-value order tracking
-- Customer identification
 
+```
 ---
 
 ### 🔧 Stored Procedure Best Practices
