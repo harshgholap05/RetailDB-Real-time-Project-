@@ -9,7 +9,7 @@
 <div align="center">
 <br/>
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-View_Project-22C55E?style=for-the-badge)](https://genai-sql-chatbox-harshvardhan-gholap.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-View_Project-22C55E?style=for-the-badge)](https://retail-db-sql-harshvardhan-gholap.vercel.app/)
 
 <br/>
 </div>
