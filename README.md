@@ -6,6 +6,13 @@
 [![Queries](https://img.shields.io/badge/Queries-20+-brightgreen?style=for-the-badge)](https://github.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=Blue)](https://www.linkedin.com/in/harshvardhan-gholap-821255326/)
 
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-View_Project-22C55E?style=for-the-badge)](https://genai-sql-chatbox-harshvardhan-gholap.vercel.app/)
+
+<br/>
+
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)
