@@ -1,18 +1,19 @@
 # 🛒 RetailDB - Real-time SQL Server Project
 
+<div align="center">
 [![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)](https://www.microsoft.com/sql-server)
 [![Database](https://img.shields.io/badge/Database-RetailDB-blue?style=for-the-badge)](https://github.com/harshgholap05/RetailDB-Real-time-Project-)
 [![T-SQL](https://img.shields.io/badge/T--SQL-Queries-orange?style=for-the-badge)](https://github.com)
 [![Queries](https://img.shields.io/badge/Queries-20+-brightgreen?style=for-the-badge)](https://github.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=Blue)](https://www.linkedin.com/in/harshvardhan-gholap-821255326/)
 
-</div>
+
 <br/>
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-View_Project-22C55E?style=for-the-badge)](https://genai-sql-chatbox-harshvardhan-gholap.vercel.app/)
 
 <br/>
-<div/>
+</div>
 
 ## 📋 Table of Contents
 
